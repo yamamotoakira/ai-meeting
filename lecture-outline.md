@@ -125,13 +125,13 @@
 ### 4-4. GitHub ── データの保存先 & スマホ連携
 - GitHubとは: 「クラウド上のファイル保管庫」（プログラマーだけのものではない）
 - なぜGitHubを使うのか
-  - Claude Codeで作ったファイル・プログラムの保存先
+  - Claude Code / Codex で作ったファイル・プログラムの保存先
   - バージョン管理 ── 過去の状態にいつでも戻せる
   - 無料で使える
-- **Claude Codeクラウド連携でスマホから使う**
-  - claude.ai/code にアクセスすればブラウザからClaude Codeが使える
-  - GitHubと連携することで、PCで作った作業の続きをスマホからできる
-  - 外出先でもAIに指示を出して作業を進められる
+- **Claude Code も Codex も、どちらもスマホからクラウド運用できる**
+  - Claude Code: ブラウザで claude.ai/code → GitHubリポジトリを指定して作業
+  - Codex: ChatGPTモバイルアプリ（iOS/Android）→ GitHubリポジトリを指定して作業（2026年5月〜、無料プラン対応）
+  - どちらも「PCで作業 → GitHubに保存 → スマホで続き」が可能
 - GitHubアカウント作成 → リポジトリ作成の手順（デモ）
 
 ### 4-5. Obsidian連携（知識の整理棚）
