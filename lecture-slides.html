@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI導入講義スライド</title>
+<style>
+@page {
+  size: 1280px 720px;
+  margin: 0;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", sans-serif;
+  background: #fff;
+  color: #1a1a2e;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.slide {
+  width: 1280px;
+  height: 720px;
+  padding: 56px 72px;
+  page-break-after: always;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.slide:last-child { page-break-after: avoid; }
+
+/* Title slide */
+.slide.title-slide {
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  color: #fff;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.slide.title-slide h1 {
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 24px;
+}
+.slide.title-slide .subtitle {
+  font-size: 22px;
+  color: #b8b5ff;
+  font-weight: 400;
+}
+.slide.title-slide .meta {
+  margin-top: 48px;
+  font-size: 16px;
+  color: #8884d8;
+}
+
+/* Section title slide */
+.slide.section-slide {
+  background: linear-gradient(135deg, #302b63, #24243e);
+  color: #fff;
+  justify-content: center;
+  padding-left: 96px;
+}
+.slide.section-slide .section-num {
+  font-size: 18px;
+  color: #b8b5ff;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  margin-bottom: 16px;
+}
+.slide.section-slide h2 {
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.slide.section-slide .section-time {
+  margin-top: 20px;
+  font-size: 18px;
+  color: #8884d8;
+}
+
+/* Content slides */
+.slide.content {
+  background: #fafafa;
+}
+.slide.content .slide-header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 36px;
+  border-bottom: 3px solid #302b63;
+  padding-bottom: 12px;
+}
+.slide.content .slide-header .num {
+  font-size: 14px;
+  color: #8884d8;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.slide.content .slide-header h3 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+.slide.content .body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Common elements */
+h4 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #302b63;
+  margin-bottom: 12px;
+}
+ul {
+  list-style: none;
+  padding: 0;
+}
+ul li {
+  font-size: 22px;
+  line-height: 1.6;
+  padding: 6px 0 6px 28px;
+  position: relative;
+}
+ul li::before {
+  content: "●";
+  position: absolute;
+  left: 0;
+  color: #6c63ff;
+  font-size: 10px;
+  top: 14px;
+}
+.highlight {
+  background: #e8e6ff;
+  border-left: 4px solid #6c63ff;
+  padding: 16px 24px;
+  border-radius: 0 8px 8px 0;
+  font-size: 20px;
+  line-height: 1.6;
+  margin: 12px 0;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 18px;
+  margin: 8px 0;
+}
+table th {
+  background: #302b63;
+  color: #fff;
+  padding: 10px 16px;
+  text-align: left;
+  font-weight: 600;
+}
+table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid #ddd;
+}
+table tr:nth-child(even) td { background: #f0efff; }
+table tr:nth-child(odd) td { background: #fff; }
+
+/* Diagram box */
+.diagram {
+  background: #fff;
+  border: 2px solid #d0cef5;
+  border-radius: 12px;
+  padding: 24px 32px;
+  font-family: "Courier New", monospace;
+  font-size: 17px;
+  line-height: 1.7;
+  white-space: pre;
+  margin: 12px 0;
+  color: #1a1a2e;
+}
+
+/* Two column layout */
+.two-col {
+  display: flex;
+  gap: 40px;
+  flex: 1;
+}
+.two-col .col {
+  flex: 1;
+}
+
+/* Example box */
+.example {
+  background: #fff;
+  border: 1px solid #d0cef5;
+  border-radius: 8px;
+  padding: 16px 20px;
+  font-size: 19px;
+  line-height: 1.5;
+  margin: 8px 0;
+  color: #333;
+}
+.example .prompt {
+  color: #6c63ff;
+  font-weight: 600;
+}
+.example .result {
+  color: #666;
+  font-size: 16px;
+  margin-top: 4px;
+}
+
+/* Footer */
+.slide-footer {
+  position: absolute;
+  bottom: 16px;
+  right: 32px;
+  font-size: 12px;
+  color: #aaa;
+}
+
+/* Small text */
+.small { font-size: 16px; color: #666; }
+.accent { color: #6c63ff; font-weight: 600; }
+.warn { color: #e74c3c; font-weight: 600; }
+
+/* Comparison cards */
+.compare-cards {
+  display: flex;
+  gap: 24px;
+}
+.compare-card {
+  flex: 1;
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px 24px;
+  border: 2px solid #d0cef5;
+}
+.compare-card.alt { border-color: #f0c040; }
+.compare-card h4 {
+  text-align: center;
+  margin-bottom: 16px;
+  font-size: 22px;
+}
+.compare-card ul li { font-size: 18px; }
+
+/* Icon list */
+.icon-list li::before { content: ""; }
+.icon-list li { padding-left: 36px; font-size: 20px; }
+
+/* NG table */
+.ng-table td:first-child { color: #e74c3c; font-weight: 600; }
+
+.big-number {
+  font-size: 64px;
+  font-weight: 700;
+  color: #6c63ff;
+  line-height: 1;
+}
+.step-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 0;
+  border-bottom: 1px solid #eee;
+}
+.step-row .big-number { font-size: 48px; }
+.step-row .step-text { font-size: 22px; }
+.step-row .step-time { font-size: 16px; color: #888; white-space: nowrap; }
+</style>
+</head>
+<body>
+
+<!-- Slide 1: Title -->
+<div class="slide title-slide">
+  <h1>AIを"つなげて"使いこなす</h1>
+  <div class="subtitle">Claude Code / Codex ではじめる実践AI活用</div>
+  <div class="meta">AI導入講義 ── 約2時間</div>
+</div>
+
+<!-- Slide 2: Today's Goals -->
+<div class="slide content">
+  <div class="slide-header">
+    <h3>今日のゴール</h3>
+  </div>
+  <div class="body" style="justify-content:center; gap:32px;">
+    <div class="highlight" style="font-size:26px;">
+      ① AIの基本的な仕組みと使い方を知ること
+    </div>
+    <div class="highlight" style="font-size:26px;">
+      ② 実際にAIを使って「何か」を作り始められるようになること
+    </div>
+    <div style="text-align:center; margin-top:24px;">
+      <span style="font-size:22px; color:#666;">AIは単体で使うより、<span class="accent">普段使っているサービスとつなげる</span>と、ぐっと実用的になります</span>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 3: Workflow Overview -->
+<div class="slide content">
+  <div class="slide-header">
+    <h3>ワークフロー全体像</h3>
+  </div>
+  <div class="body" style="justify-content:center;">
+    <div class="diagram" style="font-size:19px; text-align:center;">
+Claude Code / Codex ← メインエンジン（考える・作る）
+     │
+     ├── Googleカレンダー ··· 予定の確認・管理
+     ├── スプレッドシート ··· データの分析
+     ├── Gmail ·············· メールの要約・下書き
+     │
+     ├──→ GitHub ··········· 保存（スマホからも使える）
+     ├──→ Obsidian ········· 知識の整理・蓄積
+     └──→ NotebookLM ······· 仕上げ・スライド・音声化</div>
+  </div>
+</div>
+
+<!-- Slide 4: Section 2 Title -->
+<div class="slide section-slide">
+  <div class="section-num">Part 2</div>
+  <h2>AIサービスを知る</h2>
+  <div class="section-time">20分</div>
+</div>
+
+<!-- Slide 5: Accounts -->
+<div class="slide content">
+  <div class="slide-header">
+    <span class="num">2-1</span>
+    <h3>必要なアカウント</h3>
+  </div>
+  <div class="body">
+    <table>
+      <tr><th>サービス</th><th>必要なアカウント</th><th>費用</th></tr>
+      <tr><td>Claude Code</td><td>Anthropicアカウント</td><td class="accent">有料プラン以上</td></tr>
+      <tr><td>Codex</td><td>OpenAIアカウント</td><td class="accent">有料プラン以上</td></tr>
+      <tr><td>Googleカレンダー・スプレッドシート・Gmail・NotebookLM</td><td>Googleアカウント</td><td>無料</td></tr>
+      <tr><td>GitHub</td><td>GitHubアカウント</td><td>無料</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- Slide 6: Pricing -->
+<div class="slide content">
+  <div class="slide-header">
+    <span class="num">2-1</span>
+    <h3>料金プランの比較</h3>
+  </div>
+  <div class="body">
+    <table>
+      <tr><th></th><th>Anthropic（Claude）</th><th>OpenAI（ChatGPT）</th></tr>
+      <tr><td>無料プラン</td><td>チャット（claude.ai）のみ</td><td>チャット（ChatGPT）のみ</td></tr>
+      <tr><td>Pro / Plus</td><td>月$20 ── Claude Code 利用可</td><td>月$20 ── Codex 利用可</td></tr>
+      <tr><td>Max / Pro</td><td>月$100〜 ── 上限拡大</td><td>月$200 ── 上限拡大</td></tr>
+    </table>
+    <div class="highlight" style="margin-top:24px;">
+      Claude Code / Codex を使うには<span class="accent">有料プラン以上の契約が必要</span>です。<br>まずは<span class="accent">月$20</span>のプランから始めるのがおすすめです。
+    </div>
+  </div>
+</div>
+
+<!-- Slide 7: Claude Code / Codex -->
+<div class="slide content">
+  <div class="slide-header">
+    <span class="num">2-2</span>
+    <h3>Claude Code / Codex とは</h3>
+  </div>
+  <div class="body">
+    <p style="font-size:22px; margin-bottom:20px;">文章を書く、資料を作る、データを整理する、アイデアを出す ── AIと一緒に進められるデスクトップアプリ</p>
+    <table>
+      <tr><th></th><th>Claude Code</th><th>Codex</th></tr>
+      <tr><td>提供元</td><td>Anthropic</td><td>OpenAI</td></tr>
+      <tr><td>中のAI</td><td>Claude</td><td>ChatGPT / GPT</td></tr>
+      <tr><td>得意なこと</td><td>長文の理解・丁寧な応答</td><td>幅広い知識・コード生成</td></tr>
+      <tr><td>おすすめ場面</td><td>じっくり考える作業</td><td>素早く試す作業</td></tr>
+    </table>
+    <div class="highlight" style="margin-top:16px;">
+      どちらが良い・悪いではなく、<span class="accent">両方使える</span>のが理想です
+    </div>
+  </div>
+</div>
+
+<!-- Slide 8: Chat vs Code -->
+<div class="slide content">
+  <div class="slide-header">
+    <span class="num">2-3</span>
+    <h3>チャットとの違い・モード</h3>
+  </div>
+  <div class="body">
+    <div class="compare-cards" style="margin-bottom:24px;">
+      <div class="compare-card">
+        <h4>チャット（Claude.ai / ChatGPT）</h4>
+        <ul>
+          <li>質問 → 回答</li>
+          <li>会話だけ</li>
+        </ul>
+      </div>
+      <div class="compare-card" style="border-color:#6c63ff;">
+        <h4 style="color:#6c63ff;">Claude Code / Codex</h4>
+        <ul>
+          <li>ファイルの読み書き</li>
+          <li>外部サービスと連携</li>
+          <li>実際に<span class="accent">「作業」ができる</span></li>
+        </ul>
+      </div>
+    </div>
+    <table>
+      <tr><th>モード</th><th>何ができるか</th></tr>
+      <tr><td class="accent">Chat</td><td>質問すると答えてくれる。ファイルは触らない</td></tr>
+      <tr><td class="accent">Agent</td><td>ファイルの作成・編集、外部サービスとの連携など、実際の作業を自律的に進める</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- Slide 9: Section 3 Title -->
+<div class="slide section-slide">
+  <div class="section-num">Part 3</div>
+  <h2>APIキーの理解と設定</h2>
+  <div class="section-time">20分</div>
+</div>
+
+<!-- Slide 10: API Key concept -->
+<div class="slide content">
+  <div class="slide-header">
+    <span class="num">3-1</span>
+    <h3>APIキーとは何か</h3>
+  </div>
+  <div class="body" style="justify-content:center;">
+    <div class="highlight" style="font-size:24px; text-align:center; margin-bottom:32px;">
+      APIキー ＝ <span class="accent">「AIサービスに入るための自分専用の合鍵」</span>
+    </div>
+    <div class="compare-cards">
+      <div class="compare-card">
+        <h4>正面玄関</h4>
+        <p style="font-size:18px; text-align:center; padding:12px 0;">Webアプリ（ブラウザ）<br><br>メールアドレス＋パスワード<br>でログイン</p>
+      </div>
+      <div class="compare-card" style="border-color:#6c63ff;">
+        <h4 style="color:#6c63ff;">裏口の合鍵（APIキー）</h4>
+        <p style="font-size:18px; text-align:center; padding:12px 0;">デスクトップアプリ /<br>他のアプリからの呼び出し<br><br>APIキーで認証</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 11: API Key Setup -->
+<div class="slide content">
+  <div class="slide-header">
+    <span class="num">3-2</span>
+    <h3>APIキーの取得手順</h3>
+  </div>
+  <div class="body">
+    <div class="two-col">
+      <div class="col">
+        <h4>Anthropic（Claude用）</h4>
+        <ul>
+          <li>console.anthropic.com にアクセス</li>
+          <li>アカウント作成 / ログイン</li>
+          <li>「API Keys」メニュー</li>
+          <li>「Create Key」をクリック</li>
+          <li>名前をつけて作成</li>
+          <li class="warn">この瞬間にコピー！</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>OpenAI（Codex用）</h4>
+        <ul>
+          <li>platform.openai.com にアクセス</li>
+          <li>アカウント作成 / ログイン</li>
+          <li>「API Keys」メニュー</li>
+          <li>「Create new secret key」</li>
+          <li>名前をつけて作成（sk-...）</li>
+          <li class="warn">この瞬間にコピー！</li>
+        </ul>
+      </div>
+    </div>
+    <div class="highlight" style="margin-top:16px;">
+      ⚠ APIキーは<span class="warn">表示された瞬間にコピー</span>してください。ページを閉じると<span class="warn">二度と見られません</span>。
+    </div>
+  </div>
+</div>
+
+<!-- Slide 12: API Key Safety -->
+<div class="slide content">
+  <div class="slide-header">
+    <span class="num">3-3</span>
+    <h3>APIキーの安全な扱い方</h3>
+  </div>
+  <div class="body">
+    <p style="font-size:20px; margin-bottom:16px;">APIキーを使うと<span class="accent">使った分だけ課金</span>される ── <span class="warn">クレジットカード番号と同じくらい大事</span></p>
+    <h4 style="color:#e74c3c;">絶対にやってはいけない3つのこと</h4>
+    <table class="ng-table" style="margin-bottom:20px;">
+      <tr><th>NG行為</th><th>なぜダメか</th></tr>
+      <tr><td>SNSに投稿する</td><td>ボットが即座に拾って不正利用される</td></tr>
+      <tr><td>他人に教える</td><td>その人の利用分も自分に請求が来る</td></tr>
+      <tr><td>メールやチャットで送る</td><td>途中で盗まれる可能性がある</td></tr>
+    </table>
+    <h4>安全な管理方法</h4>
+    <ul>
+      <li>パスワードマネージャー（1Password、Bitwarden等）に保存</li>
+      <li><span class="accent">利用上限（Spending Limit）</span>を設定 ── 月$5〜10で安心</li>
+      <li>漏洩したら → 即座にキーを無効化（Revoke）して再生成</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Slide 13: Section 4 Title -->
+<div class="slide section-slide">
+  <div class="section-num">Part 4</div>
+  <h2>外部サービスとの連携</h2>
+  <div class="section-time">25分</div>
+</div>
+
+<!-- Slide 14: Calendar -->
+<div class="slide content">
+  <div class="slide-header">
+    <span class="num">4-1</span>
+    <h3>Googleカレンダー連携</h3>
+  </div>
+  <div class="body">
+    <p style="font-size:20px; margin-bottom:20px;">連携の設定をすれば、AIが直接カレンダーを見に行けるようになります</p>
+    <div class="example" style="margin-bottom:16px;">
+      <div class="prompt">「来週の月曜から金曜で、2時間以上空いている時間帯を探して」</div>
+      <div class="result">→ カレンダーを確認して空き時間を一覧表示</div>
+    </div>
+    <div class="example">
+      <div class="prompt">「水曜の14時から『AIチーム勉強会』という予定を入れて」</div>
+      <div class="result">→ カレンダーにイベントを自動作成</div>
+    </div>
+    <div class="highlight" style="margin-top:24px;">
+      予定の<span class="accent">確認</span>も<span class="accent">追加</span>も、AIに話しかけるだけ
+    </div>
+  </div>
+</div>
+
+<!-- Slide 15: Spreadsheet -->
+<div class="slide content">
+  <div class="slide-header">
+    <span class="num">4-2</span>
+    <h3>Googleスプレッドシート連携</h3>
+  </div>
+  <div class="body">
+    <p style="font-size:20px; margin-bottom:20px;">Google Drive 経由でスプレッドシートの中身を読み書きできます</p>
+    <div class="example" style="margin-bottom:16px;">
+      <div class="prompt">「この家計簿スプレッドシートを読み込んで、月ごとの食費の推移をまとめて」</div>
+      <div class="result">→ スプレッドシートのデータを読み取り、分析結果を返す</div>
+    </div>
+    <div class="example">
+      <div class="prompt">「アンケートの回答データを集計して、質問ごとの満足度の平均を出して」</div>
+      <div class="result">→ データを読み込み、集計・分析</div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 16: Gmail -->
+<div class="slide content">
+  <div class="slide-header">
+    <span class="num">4-3</span>
+    <h3>Gmail連携</h3>
+  </div>
+  <div class="body">
+    <div class="example" style="margin-bottom:10px;">
+      <div class="prompt">「未読メールを内容ごとに分類して、急ぎ・確認・後で読むにラベルを付けて」</div>
+      <div class="result">→ 内容に応じて自動でラベル付け・振り分け</div>
+    </div>
+    <div class="example" style="margin-bottom:10px;">
+      <div class="prompt">「今日届いた未読メールを要約して」</div>
+      <div class="result">→ 未読メールの要点を短く説明</div>
+    </div>
+    <div class="example" style="margin-bottom:10px;">
+      <div class="prompt">「この内容で返信の下書きを作って：打ち合わせは来週火曜14時でOK」</div>
+      <div class="result">→ 丁寧なビジネスメールの下書きを生成</div>
+    </div>
+    <p style="font-size:16px; color:#e74c3c; margin-top:12px;">※ 機密性の高い内容（契約書、個人情報など）には注意してください</p>
+  </div>
+</div>
+
+<!-- Slide 17: GitHub -->
+<div class="slide content">
+  <div class="slide-header">
+    <span class="num">4-4</span>
+    <h3>GitHub ── クラウド上の書庫</h3>
+  </div>
+  <div class="body">
+    <p style="font-size:22px; margin-bottom:20px;">「プログラマーの道具」ではなく、<span class="accent">「クラウド上の書庫」</span>として使います</p>
+    <div class="two-col">
+      <div class="col">
+        <h4>GitHubに保存すると</h4>
+        <ul>
+          <li>どこからでもアクセスできる（スマホからも）</li>
+          <li>過去の状態に戻せる（バージョン管理）</li>
+          <li>無料で使える</li>
+          <li>Claude Codeとの<span class="accent">相性が抜群</span></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>スマホからも使える</h4>
+        <table style="font-size:16px;">
+          <tr><th></th><th>Claude Code</th><th>Codex</th></tr>
+          <tr><td>方法</td><td>claude.ai/code<br>(ブラウザ)</td><td>ChatGPTアプリ<br>(iOS/Android)</td></tr>
+          <tr><td>特徴</td><td>Web上で完結</td><td>アプリ内で開始</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 18: GitHub Diagram -->
+<div class="slide content">
+  <div class="slide-header">
+    <span class="num">4-4</span>
+    <h3>スマホからの作業イメージ</h3>
+  </div>
+  <div class="body" style="justify-content:center;">
+    <div class="diagram" style="font-size:18px; text-align:center;">
+自宅PC                          外出先（スマホ）
+┌──────────────┐            ┌──────────────────┐
+│ Claude Code  │            │ claude.ai/code   │
+│ デスクトップ  │── GitHub ──│  （ブラウザ）      │
+└──────────────┘     │      └──────────────────┘
+                     │
+┌──────────────┐     │      ┌──────────────────┐
+│ Codex        │     │      │ ChatGPTアプリ     │
+│ デスクトップ  │── GitHub ──│  （iOS/Android）   │
+└──────────────┘            └──────────────────┘
+     ↕                             ↕
+ファイルを作成・編集         続きを指示・修正</div>
+  </div>
+</div>
+
+<!-- Slide 19: Obsidian -->
+<div class="slide content">
+  <div class="slide-header">
+    <span class="num">4-5</span>
+    <h3>Obsidian連携 ── 知識の整理棚</h3>
+  </div>
+  <div class="body" style="justify-content:center;">
+    <p style="font-size:20px; margin-bottom:16px;">自分のPC上で動くノートアプリ。データが全て<span class="accent">自分のパソコンに保存</span>されるので安心</p>
+    <div class="diagram" style="font-size:20px; text-align:center;">
+① Claude Codeで原案・アイデアを作る
+     ↓
+② Obsidianに保存して整理する（タグ付け、リンク）
+     ↓
+③ 次にClaude Codeを使うとき、Obsidianのノートを読み込ませる
+     ↓
+④ 過去の知識を踏まえた、より良い成果物ができる
+     ↓
+⑤ また保存する → ①に戻る</div>
+    <div class="highlight" style="margin-top:16px;">
+      このサイクルで「AIとの作業履歴」が<span class="accent">自分だけの知識ベース</span>になる
+    </div>
+  </div>
+</div>
+
+<!-- Slide 20: MCP -->
+<div class="slide content">
+  <div class="slide-header">
+    <span class="num">4-6</span>
+    <h3>連携の仕組み ── MCP（通訳さん）</h3>
+  </div>
+  <div class="body" style="justify-content:center;">
+    <div class="highlight" style="font-size:22px; text-align:center; margin-bottom:24px;">
+      MCP（Model Context Protocol）＝ <span class="accent">AIと外部サービスをつなぐ通訳さん</span>
+    </div>
+    <div class="diagram" style="font-size:19px; text-align:center;">
+あなた → Claude Code → MCPコネクタ → Googleカレンダー
+「来週の空きを     （通訳さん）    （予定データ）
+  探して」
+
+あなた ← Claude Code ← MCPコネクタ ← Googleカレンダー
+「火曜の午後と      （翻訳して      （データを返す）
+ 木曜の午前が       わかりやすく）
+ 空いています」</div>
+  </div>
+</div>
+
+<!-- Slide 21: How to find services -->
+<div class="slide content">
+  <div class="slide-header">
+    <span class="num">4-6</span>
+    <h3>サービスの探し方</h3>
+  </div>
+  <div class="body">
+    <div class="two-col">
+      <div class="col">
+        <h4>Claudeの場合</h4>
+        <ul>
+          <li>claude.ai → 設定 → 「コネクタ」</li>
+          <li>サービス名を検索</li>
+          <li>「接続」をクリック</li>
+          <li>アカウントでログイン → 許可</li>
+        </ul>
+        <h4 style="margin-top:16px;">ChatGPT / Codexの場合</h4>
+        <ul>
+          <li>GPT Store でサービス名を検索</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>探すときのコツ</h4>
+        <ul>
+          <li>「自分が毎日使っているサービス名」で検索</li>
+          <li>公式になくても、コミュニティ製があることも</li>
+          <li>定期的にチェック ── 日々増えている</li>
+        </ul>
+        <h4 style="margin-top:16px;">MCPがない場合</h4>
+        <div class="highlight">
+          <span class="accent">Headless Playwright</span><br>
+          <span style="font-size:16px;">＝ AIにブラウザを操作させる技術<br>通訳はいないが、直接現地で身振り手振り</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 22: Other services -->
+<div class="slide content">
+  <div class="slide-header">
+    <span class="num">4-6</span>
+    <h3>こんなサービスとも連携できます</h3>
+  </div>
+  <div class="body" style="justify-content:center;">
+    <table style="font-size:22px;">
+      <tr><th>カテゴリ</th><th>サービス</th><th>何ができるか</th></tr>
+      <tr><td>デザイン</td><td>Figma / Canva / Adobe</td><td>デザインデータ取得、画像作成</td></tr>
+      <tr><td>プレゼン</td><td>Gamma</td><td>テキストからスライドを自動生成</td></tr>
+      <tr><td>タスク管理</td><td>Todoist / Trello</td><td>やることリストの管理</td></tr>
+      <tr><td>コミュニケーション</td><td>Slack</td><td>チャットの要約、メッセージ送信</td></tr>
+    </table>
+    <div class="highlight" style="margin-top:24px;">
+      大事なのは全部覚えることではなく、<span class="accent">「探し方」を知ること</span>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 23: Section 5 Title -->
+<div class="slide section-slide">
+  <div class="section-num">Part 5</div>
+  <h2>資料化の比較<br>Claude Code/Codex vs NotebookLM</h2>
+  <div class="section-time">10分</div>
+</div>
+
+<!-- Slide 24: Comparison -->
+<div class="slide content">
+  <div class="slide-header">
+    <span class="num">5-2 / 5-3</span>
+    <h3>同じ内容を渡すと、どう違う？</h3>
+  </div>
+  <div class="body">
+    <div class="compare-cards" style="flex:1;">
+      <div class="compare-card" style="border-color:#6c63ff;">
+        <h4 style="color:#6c63ff;">Claude Code / Codex</h4>
+        <ul>
+          <li>AIの知識も加えて<span class="accent">内容を膨らませる</span></li>
+          <li>HTML / Markdown / PDF など<span class="accent">出力形式を自由に指定</span></li>
+          <li>原案作成から資料化まで<span class="accent">一気通貫</span></li>
+          <li>デザインはシンプル</li>
+        </ul>
+      </div>
+      <div class="compare-card" style="border-color:#f0c040;">
+        <h4 style="color:#d4a017;">NotebookLM</h4>
+        <ul>
+          <li>渡した素材の<span class="accent">中身だけ</span>を使う（正確）</li>
+          <li>複数の資料を<span class="accent">横断して分析</span></li>
+          <li><span class="accent">Audio Overview</span>で音声化</li>
+          <li>Googleアカウントだけで使える</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 25: Comparison Table -->
+<div class="slide content">
+  <div class="slide-header">
+    <span class="num">5-4</span>
+    <h3>比較まとめ</h3>
+  </div>
+  <div class="body">
+    <table style="font-size:20px;">
+      <tr><th></th><th>Claude Code / Codex</th><th>NotebookLM</th></tr>
+      <tr><td>素材の扱い</td><td>AIの知識も加えて膨らませる</td><td>渡した素材の中身だけを使う</td></tr>
+      <tr><td>出力形式</td><td>HTML / Markdown / PDF など自由</td><td>テキスト / 音声</td></tr>
+      <tr><td>音声化</td><td>できない</td><td>Audio Overviewで可能</td></tr>
+      <tr><td>横断分析</td><td>会話で指示すれば可能</td><td>アップロードするだけ</td></tr>
+      <tr><td>向いている場面</td><td class="accent">原案作成から資料化まで一気通貫</td><td class="accent">正確な要約・音声化・整理</td></tr>
+    </table>
+    <div class="highlight" style="margin-top:20px;">
+      おすすめ: <span class="accent">原案 → Claude Code</span>、<span class="accent">仕上げ・音声化 → NotebookLM</span>、Google Drive経由で連携
+    </div>
+  </div>
+</div>
+
+<!-- Slide 26: Final Workflow -->
+<div class="slide content">
+  <div class="slide-header">
+    <span class="num">5-5</span>
+    <h3>全体ワークフローまとめ</h3>
+  </div>
+  <div class="body" style="justify-content:center;">
+    <div class="diagram" style="font-size:19px; text-align:center;">
+① Claude Code / Codex で原案・コンテンツを作成
+     │
+     ├── Googleカレンダーでスケジュール確認
+     ├── Googleスプレッドシートでデータ分析
+     ├── Gmailでメール要約・下書き作成
+     │
+     ├──→ GitHub にデータ・成果物を保存（スマホからも作業可能）
+     ├──→ Obsidian に知識を整理・蓄積
+     │
+     └──→ 資料化（2つの方法）
+            ├── Claude Code / Codex → そのままHTML/PDFスライド出力
+            └── Google Drive → NotebookLM → 要約/音声化</div>
+  </div>
+</div>
+
+<!-- Slide 27: Section 6 Title -->
+<div class="slide section-slide">
+  <div class="section-num">Part 6</div>
+  <h2>まとめと次のステップ</h2>
+  <div class="section-time">5分</div>
+</div>
+
+<!-- Slide 28: Key Takeaways -->
+<div class="slide content">
+  <div class="slide-header">
+    <span class="num">6-1</span>
+    <h3>今日のポイント ── 3つだけ</h3>
+  </div>
+  <div class="body" style="justify-content:center; gap:20px;">
+    <div class="highlight" style="font-size:22px;">
+      <span class="big-number" style="font-size:36px; margin-right:16px;">1</span>
+      AIは<span class="accent">「つなげて」使う</span>と本当に便利<br>
+      <span class="small" style="margin-left:52px;">カレンダー、メール、スプレッドシート、保存先と連携 →「何でもできるアシスタント」</span>
+    </div>
+    <div class="highlight" style="font-size:22px;">
+      <span class="big-number" style="font-size:36px; margin-right:16px;">2</span>
+      APIキーは<span class="accent">「合鍵」</span>── 大事に管理<br>
+      <span class="small" style="margin-left:52px;">取得方法、安全な保管、利用上限の設定。この3つを押さえれば怖くない</span>
+    </div>
+    <div class="highlight" style="font-size:22px;">
+      <span class="big-number" style="font-size:36px; margin-right:16px;">3</span>
+      <span class="accent">探し方</span>を覚えれば、どんどん広がる<br>
+      <span class="small" style="margin-left:52px;">MCPコネクタやプラグインストアで「自分が使うサービス名」を検索</span>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 29: Next Steps -->
+<div class="slide content">
+  <div class="slide-header">
+    <span class="num">6-2</span>
+    <h3>今日から始める3ステップ</h3>
+  </div>
+  <div class="body" style="justify-content:center;">
+    <div class="step-row">
+      <div class="big-number">1</div>
+      <div class="step-text">Claude Codeのデスクトップアプリをインストールする</div>
+      <div class="step-time">約10分</div>
+    </div>
+    <div class="step-row">
+      <div class="big-number">2</div>
+      <div class="step-text">GitHubアカウントを作って、<span class="accent">claude.ai/code</span> をスマホで開いてみる</div>
+      <div class="step-time">約15分</div>
+    </div>
+    <div class="step-row">
+      <div class="big-number">3</div>
+      <div class="step-text">claude.aiの「コネクタ」で、自分がよく使うサービスを検索してみる</div>
+      <div class="step-time">約5分</div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 30: Q&A -->
+<div class="slide title-slide">
+  <h1>Q&A</h1>
+  <div class="subtitle">「こんなこともできる？」という質問、大歓迎です</div>
+</div>
+
+</body>
+</html>
